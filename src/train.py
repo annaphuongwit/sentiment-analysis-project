@@ -1,8 +1,6 @@
 # Add this import at the top
 import argparse
 
-<<<<<<< HEAD
-=======
 #  New imports
 import os
 from joblib import dump
@@ -10,7 +8,7 @@ from joblib import dump
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline, make_pipeline
->>>>>>> feature/add-training-logic
+
 from sklearn.model_selection import train_test_split
 import pandas as pd
 
@@ -52,8 +50,6 @@ def train_model(X_train: pd.Series, y_train: pd.Series) -> Pipeline:
     clf_pipeline.fit(X_train, y_train)
     return clf_pipeline
 
-<<<<<<< HEAD
-=======
 # New function
 def save_model(model: Pipeline, model_path: str) -> None:
     """
@@ -78,7 +74,7 @@ def main(data_path: str, model_path: str) -> None:
     save_model(clf, model_path)
 
 
->>>>>>> feature/add-training-logic
+
 # Replace the old if __name__ block with this one
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -86,7 +82,7 @@ if __name__ == "__main__":
     parser.add_argument("--out", default="models/sentiment.joblib")
 
     args: argparse.Namespace = parser.parse_args()
-<<<<<<< HEAD
+
     main(data_path=args.data, model_path=args.out)
-=======
+
 
