@@ -89,5 +89,4 @@ if __name__ == "__main__":
 <<<<<<< HEAD
     main(data_path=args.data, model_path=args.out)
 =======
-    main(data_path=args.data, model_path=args.out)
->>>>>>> feature/add-training-logic
+
