@@ -20,4 +20,4 @@ python src/train.py --data data/train.csv --out models/sentiment.joblib
 # sentiment-analysis-Pipeline
 ## Predict
 Run the predictions in the command line. Use any sentence you like.
-python src/predict.py " That was the best"  " I'm happy "Whoa! That's terrible"  " That's too bad"
+python src/predict.py " That was the best"  " I'm happy "Whoa! That's wonderfull"  " That's too excellent"
