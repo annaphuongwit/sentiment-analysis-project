@@ -10,7 +10,7 @@ def load_model(model_path: str) -> Any:
     return load(model_path)
 
 
-# Other functions will go here
+# Other functions will go here - Developer A
 def predict_texts(
         classifier: Any,
         input_texts: list[str]
