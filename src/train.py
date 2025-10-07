@@ -12,6 +12,9 @@ from sklearn.pipeline import Pipeline, make_pipeline
 from sklearn.model_selection import train_test_split
 import pandas as pd
 
+# for fix/my-awesome-fix
+from sklearn.metrics import classification_report, confusion_matrix
+
 def load_and_validate_data(data_path: str) -> pd.DataFrame:
     """
     Loads data from a CSV and ensures it has the required columns.
@@ -58,6 +61,20 @@ def save_model(model: Pipeline, model_path: str) -> None:
     os.makedirs(os.path.dirname(model_path), exist_ok=True)
     dump(model, model_path)
     print(f"Saved model to {model_path}")
+    
+# for fix/my-awesome-fix    
+def evaluate_model(model: Pipeline, X_test: pd.Series, y_test: pd.Series) -> None:
+    """
+    Evaluates the model on test data and prints detailed metrics.
+    """
+    y_pred = model.predict(X_test)
+
+    print("\n📊 Model Evaluation Report")
+    print("=" * 30)
+    print(classification_report(y_test, y_pred, digits=3))
+
+    print("\n🧮 Confusion Matrix")
+    print(confusion_matrix(y_test, y_pred))
 
 def main(data_path: str, model_path: str) -> None:
     """
@@ -71,8 +88,10 @@ def main(data_path: str, model_path: str) -> None:
     acc = clf.score(X_test, y_test)
     print(f"Test accuracy: {acc:.3f}")
 
+     # New step: print detailed metrics
+    evaluate_model(clf, X_test, y_test)
+    
     save_model(clf, model_path)
-
 
 
 # Replace the old if __name__ block with this one
