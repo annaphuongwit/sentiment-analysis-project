@@ -53,6 +53,16 @@ def safe_predict_texts(classifier: Any, input_texts: list[str]) -> tuple[list[in
         return [], []
 # improvement end
 
+# 2. new improvement begin
+def summarize_predictions(preds: list[int]) -> None:
+    """Print a summary count of positive vs negative predictions."""
+    total = len(preds)
+    pos = sum(preds)
+    neg = total - pos
+    print(f"\n📊 Summary: {total} texts | 👍 {pos} positive | 👎 {neg} negative\n")
+# improvement end
+
+
 def main(
         model_path: str,
         input_texts: list[str]
@@ -61,9 +71,13 @@ def main(
     preds, probs = predict_texts(classifier, input_texts)
     for line in format_prediction_lines(input_texts, preds, probs):
         print(line)
-        
+
     # 1. new improvement begin
     preds, probs = safe_predict_texts(classifier, input_texts)
+    # improvement end
+
+    # 2. improvement begin
+    summarize_predictions(preds)
     # improvement end
 
 if __name__ == "__main__":
