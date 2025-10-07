@@ -40,6 +40,18 @@ def format_prediction_lines(
             lines.append(f"{pred}\t{prob:.3f}\t{text}")
     return lines
 
+# 1. new improvement begin
+def safe_predict_texts(classifier: Any, input_texts: list[str]) -> tuple[list[int], list[float | None]]:
+    """Safely return predictions, handling bad inputs gracefully."""
+    try:
+        if not input_texts:
+            raise ValueError("No input text provided.")
+        preds, probs = predict_texts(classifier, input_texts)
+        return preds, probs
+    except Exception as e:
+        print(f"⚠️ Error during prediction: {e}")
+        return [], []
+# improvement end
 
 def main(
         model_path: str,
@@ -49,7 +61,10 @@ def main(
     preds, probs = predict_texts(classifier, input_texts)
     for line in format_prediction_lines(input_texts, preds, probs):
         print(line)
-
+        
+    # 1. new improvement begin
+    preds, probs = safe_predict_texts(classifier, input_texts)
+    # improvement end
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
