@@ -32,16 +32,15 @@ python src/predict.py " That was the best"  " I'm happy "Whoa! That's wonderfull
 To make a quick sentiment prediction:
 ```bash
 python src/predict.py --model models/sentiment.joblib "I love this!" "This is bad."
-<label> <probability> <text>
 
 
-**In Code:**
+### In Code
 Add docstrings to functions like `format_prediction_lines`:
 ```python
 def format_prediction_lines(...):
     """
     Formats the model predictions for CLI output.
     Example line:
-        1    0.932    I love this product!
+        1    0.932    I love this changing and this product!
     """
 
