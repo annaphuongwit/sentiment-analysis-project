@@ -42,24 +42,23 @@ def format_prediction_lines(
 
 # 1. new improvement begin
 def safe_predict_texts(classifier: Any, input_texts: list[str]) -> tuple[list[int], list[float | None]]:
-    """Safely return predictions, handling bad inputs gracefully."""
-    try:
-        if not input_texts:
-            raise ValueError("No input text provided.")
-        preds, probs = predict_texts(classifier, input_texts)
-        return preds, probs
-    except Exception as e:
-        print(f"⚠️ Error during prediction: {e}")
+    """Return predictions safely; handle empty or invalid input."""
+    if not input_texts:
+        print("⚠️ No input text provided.")
         return [], []
+    try:
+        return predict_texts(classifier, input_texts)
+    except Exception as e:
+        print(f"⚠️ Prediction error: {e}")
+        return [], []
+
 # improvement end
 
 # 2. new improvement begin
 def summarize_predictions(preds: list[int]) -> None:
-    """Print a summary count of positive vs negative predictions."""
-    total = len(preds)
-    pos = sum(preds)
-    neg = total - pos
-    print(f"\n📊 Summary: {total} texts | 👍 {pos} positive | 👎 {neg} negative\n")
+    """Show 📊 summary of 👍 positive vs 👎 negative predictions."""
+    print(f"\n📊 {len(preds)} texts | 👍 {sum(preds)} pos | 👎 {len(preds) - sum(preds)} neg\n")
+
 # improvement end
 
 
