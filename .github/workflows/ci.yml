@@ -32,6 +32,8 @@ jobs:
       - name: Run the formatter script
         run: |
           python src/formatter.py --input data/raw_sales_data.csv --output data/cleaned_sales_data.csv
-      
+      - name: Run the predictor script
+        run: |
+          python src/predict.py "I absolutely loved it!" "It was terrible!"
 
     
