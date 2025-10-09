@@ -62,22 +62,22 @@ def summarize_predictions(preds: list[int]) -> None:
 # improvement end
 
 
-# def main(
-#         model_path: str,
-#         input_texts: list[str]
-# ) -> None:
-#     classifier = load_model(model_path)
-#     preds, probs = predict_texts(classifier, input_texts)
-#     for line in format_prediction_lines(input_texts, preds, probs):
-#         print(line)
+def main(
+        model_path: str,
+        input_texts: list[str]
+) -> None:
+    """Main function for sentiment prediction."""
+    classifier = load_model(model_path)
+    preds, probs = predict_texts(classifier, input_texts)
+    for line in format_prediction_lines(input_texts, preds, probs):
+        print(line)
+    # 1. new improvement begin
+    preds, probs = safe_predict_texts(classifier, input_texts)
+    # improvement end
 
-#     # 1. new improvement begin
-#     preds, probs = safe_predict_texts(classifier, input_texts)
-#     # improvement end
-
-#     # 2. improvement begin
-#     summarize_predictions(preds)
-#     # improvement end
+    # 2. improvement begin
+    summarize_predictions(preds)
+    # improvement end
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
