@@ -12,9 +12,9 @@ def load_model(model_path: str) -> Any:
 
 # Other functions will go here
 
+
 def predict_texts(
-        classifier: Any,
-        input_texts: list[str]
+    classifier: Any, input_texts: list[str]
 ) -> tuple[list[int], list[float | None]]:
     """Return labels and probability-of-positive for each text."""
     preds: NDArray[Any] = classifier.predict(input_texts)
@@ -27,9 +27,7 @@ def predict_texts(
 
 
 def format_prediction_lines(
-        texts: list[str],
-        preds: list[int],
-        probs: list[float | None]
+    texts: list[str], preds: list[int], probs: list[float | None]
 ) -> list[str]:
     """Return tab-separated CLI output lines for each input text."""
     lines: list[str] = []
@@ -40,8 +38,11 @@ def format_prediction_lines(
             lines.append(f"{pred}\t{prob:.3f}\t{text}")
     return lines
 
+
 # 1. new improvement begin
-def safe_predict_texts(classifier: Any, input_texts: list[str]) -> tuple[list[int], list[float | None]]:
+def safe_predict_texts(
+    classifier: Any, input_texts: list[str]
+) -> tuple[list[int], list[float | None]]:
     """Return predictions safely; handle empty or invalid input."""
     if not input_texts:
         print("⚠️ No input text provided.")
@@ -52,20 +53,22 @@ def safe_predict_texts(classifier: Any, input_texts: list[str]) -> tuple[list[in
         print(f"⚠️ Prediction error: {e}")
         return [], []
 
+
 # improvement end
+
 
 # 2. new improvement begin
 def summarize_predictions(preds: list[int]) -> None:
     """Show 📊 summary of 👍 positive vs 👎 negative predictions."""
-    print(f"\n📊 {len(preds)} texts | 👍 {sum(preds)} pos | 👎 {len(preds) - sum(preds)} neg\n")
+    print(
+        f"\n📊 {len(preds)} texts | 👍 {sum(preds)} pos | 👎 {len(preds) - sum(preds)} neg\n"
+    )
+
 
 # improvement end
 
 
-def main(
-        model_path: str,
-        input_texts: list[str]
-) -> None:
+def main(model_path: str, input_texts: list[str]) -> None:
     classifier = load_model(model_path)
     preds, probs = predict_texts(classifier, input_texts)
     for line in format_prediction_lines(input_texts, preds, probs):
@@ -77,6 +80,7 @@ def main(
     # 2. improvement begin
     summarize_predictions(preds)
     # improvement end
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

@@ -15,6 +15,7 @@ import pandas as pd
 # for fix/my-awesome-fix
 from sklearn.metrics import classification_report, confusion_matrix
 
+
 def load_and_validate_data(data_path: str) -> pd.DataFrame:
     """
     Loads data from a CSV and ensures it has the required columns.
@@ -23,6 +24,7 @@ def load_and_validate_data(data_path: str) -> pd.DataFrame:
     if not {"text", "label"}.issubset(df.columns):
         raise ValueError("CSV must contain 'text' and 'label' columns")
     return df
+
 
 def split_data(
     df: pd.DataFrame,
@@ -33,7 +35,11 @@ def split_data(
     try:
         # Stratified split is preferred
         X_train, X_test, y_train, y_test = train_test_split(
-            df["text"], df["label"], test_size=0.2, random_state=42, stratify=df["label"]
+            df["text"],
+            df["label"],
+            test_size=0.2,
+            random_state=42,
+            stratify=df["label"],
         )
     except ValueError:
         # Fallback if stratification fails (e.g., on very small datasets)
@@ -41,6 +47,7 @@ def split_data(
             df["text"], df["label"], test_size=0.2, random_state=42
         )
     return X_train, X_test, y_train, y_test
+
 
 def train_model(X_train: pd.Series, y_train: pd.Series) -> Pipeline:
     """
@@ -53,6 +60,7 @@ def train_model(X_train: pd.Series, y_train: pd.Series) -> Pipeline:
     clf_pipeline.fit(X_train, y_train)
     return clf_pipeline
 
+
 # New function
 def save_model(model: Pipeline, model_path: str) -> None:
     """
@@ -61,8 +69,9 @@ def save_model(model: Pipeline, model_path: str) -> None:
     os.makedirs(os.path.dirname(model_path), exist_ok=True)
     dump(model, model_path)
     print(f"Saved model to {model_path}")
-    
-# for fix/my-awesome-fix    
+
+
+# for fix/my-awesome-fix
 def evaluate_model(model: Pipeline, X_test: pd.Series, y_test: pd.Series) -> None:
     """
     Evaluates the model on test data and prints detailed metrics.
@@ -76,6 +85,7 @@ def evaluate_model(model: Pipeline, X_test: pd.Series, y_test: pd.Series) -> Non
     print("\n🧮 Confusion Matrix")
     print(confusion_matrix(y_test, y_pred))
 
+
 def main(data_path: str, model_path: str) -> None:
     """
     Main workflow to load, train, evaluate, and save the model.
@@ -88,9 +98,9 @@ def main(data_path: str, model_path: str) -> None:
     acc = clf.score(X_test, y_test)
     print(f"Test accuracy: {acc:.3f}")
 
-     # New step: print detailed metrics
+    # New step: print detailed metrics
     evaluate_model(clf, X_test, y_test)
-    
+
     save_model(clf, model_path)
 
 
