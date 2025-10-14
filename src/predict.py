@@ -1,9 +1,17 @@
 import argparse
+import logging
+import sys
 from typing import Any
 import numpy as np
 from numpy.typing import NDArray
 from joblib import load
 
+# --- Logging config ---
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(levelname)s %(message)s")
+
+log = logging.getLogger(__name__)
 
 def load_model(model_path: str) -> Any:
     """Load and return a trained classifier."""
@@ -11,8 +19,6 @@ def load_model(model_path: str) -> Any:
 
 
 # Other functions will go here
-
-
 def predict_texts(
     classifier: Any, input_texts: list[str]
 ) -> tuple[list[int], list[float | None]]:
@@ -39,47 +45,38 @@ def format_prediction_lines(
     return lines
 
 
-# 1. new improvement begin
+# --- Safe wrapper ---
 def safe_predict_texts(
     classifier: Any, input_texts: list[str]
 ) -> tuple[list[int], list[float | None]]:
     """Return predictions safely; handle empty or invalid input."""
     if not input_texts:
-        print("⚠️ No input text provided.")
+        #print("⚠️ No input text provided.")
+        log.warning("⚠️ No input text provided.")
         return [], []
     try:
         return predict_texts(classifier, input_texts)
     except Exception as e:
-        print(f"⚠️ Prediction error: {e}")
+        #print(f"⚠️ Prediction error: {e}")
+        log.warning("⚠️ Prediction error: {e}")
         return [], []
 
 
-# improvement end
-
-
-# 2. new improvement begin
 def summarize_predictions(preds: list[int]) -> None:
     """Show 📊 summary of 👍 positive vs 👎 negative predictions."""
-    print(
-        f"\n📊 {len(preds)} texts | 👍 {sum(preds)} pos | 👎 {len(preds) - sum(preds)} neg\n"
-    )
-
-
-# improvement end
+    log.info(f"\n📊 {len(preds)} texts | 👍 {sum(preds)} pos | 👎 {len(preds) - sum(preds)} neg\n")
 
 
 def main(model_path: str, input_texts: list[str]) -> None:
     classifier = load_model(model_path)
     preds, probs = predict_texts(classifier, input_texts)
     for line in format_prediction_lines(input_texts, preds, probs):
-        print(line)
-    # 1. new improvement begin
+        log.info(line)
+   
     preds, probs = safe_predict_texts(classifier, input_texts)
-    # improvement end
-
-    # 2. improvement begin
+    
     summarize_predictions(preds)
-    # improvement end
+   
 
 
 if __name__ == "__main__":
@@ -87,4 +84,12 @@ if __name__ == "__main__":
     parser.add_argument("--model", default="models/sentiment.joblib")
     parser.add_argument("text", nargs="+", help="One or more texts to score")
     args = parser.parse_args()
+
+    if not args.text:
+        parser.print_usage()
+        print('\nerror: at least one text is required.\n'
+              'example:\n  python -m src.predict --model models/sentiment.joblib '
+              '"I love this!" "This is terrible."\n', file=sys.stderr)
+        sys.exit(2)
+
     main(model_path=args.model, input_texts=args.text)

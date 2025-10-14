@@ -1,19 +1,16 @@
-# Add this import at the top
-import argparse
-
-#  New imports
 import os
-from joblib import dump
-
+from joblib import dump 
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline, make_pipeline
-
 from sklearn.model_selection import train_test_split
 import pandas as pd
-
-# for fix/my-awesome-fix
 from sklearn.metrics import classification_report, confusion_matrix
+import logging
+import argparse
+
+logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
+log = logging.getLogger(__name__)
 
 
 def load_and_validate_data(data_path: str) -> pd.DataFrame:
@@ -68,8 +65,8 @@ def save_model(model: Pipeline, model_path: str) -> None:
     """
     os.makedirs(os.path.dirname(model_path), exist_ok=True)
     dump(model, model_path)
-    print(f"Saved model to {model_path}")
-
+    #print(f"Saved model to {model_path}")
+    log.info("Saved model to {model_path}")
 
 # for fix/my-awesome-fix
 def evaluate_model(model: Pipeline, X_test: pd.Series, y_test: pd.Series) -> None:
@@ -78,12 +75,24 @@ def evaluate_model(model: Pipeline, X_test: pd.Series, y_test: pd.Series) -> Non
     """
     y_pred = model.predict(X_test)
 
-    print("\n📊 Model Evaluation Report")
-    print("=" * 30)
-    print(classification_report(y_test, y_pred, digits=3))
+    # print("\n📊 Model Evaluation Report")
+    # print("=" * 30)
+    # print(classification_report(y_test, y_pred, digits=3))
 
-    print("\n🧮 Confusion Matrix")
-    print(confusion_matrix(y_test, y_pred))
+    # print("\n🧮 Confusion Matrix")
+    # print(confusion_matrix(y_test, y_pred))
+
+    # new alternative begin
+    log.info("=" * 30)
+    log.info("Confusion Matrix")
+    log.info("\n%s", classification_report(y_test, y_pred, digits=3))
+    log.info("\n%s", confusion_matrix(y_test, y_pred))
+
+    #acc = clf.score(X_test, y_test)
+    #log.info("Test accuracy: %.3f", acc)
+
+
+
 
 
 def main(data_path: str, model_path: str) -> None:
@@ -96,7 +105,8 @@ def main(data_path: str, model_path: str) -> None:
 
     # Evaluate and print accuracy
     acc = clf.score(X_test, y_test)
-    print(f"Test accuracy: {acc:.3f}")
+    #print(f"Test accuracy: {acc:.3f}")
+    log.info("Test accuracy: %.3f", acc)
 
     # New step: print detailed metrics
     evaluate_model(clf, X_test, y_test)

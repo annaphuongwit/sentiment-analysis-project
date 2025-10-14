@@ -1,10 +1,11 @@
+import logging
 import pandas as pd
 
+log = logging.getLogger(__name__)
 
 def process_data(df: pd.DataFrame) -> pd.DataFrame:
-     # we want to inspect the dataframe head during debugging, but it is unused
-   data_snapshot = df.head() # noqa: F841
-
+    # we want to inspect the dataframe head during debugging, but it is unused
+    #data_snapshot = df.head() # noqa: F841
 
     # clean columns names by stripping whitespace and converting to lower case
     df.columns = df.columns.str.strip().str.lower()
@@ -26,5 +27,5 @@ if __name__ == "__main__":
     cleaned_df = pd.DataFrame(data)
 
     cleaned_df = process_data(initial_df)
-    print("Cleaned DataFrame:")
-    print(cleaned_df)
+    log.info("Cleaned DataFrame:")
+    log.info(cleaned_df)

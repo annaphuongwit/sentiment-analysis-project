@@ -6,7 +6,11 @@ def clean_data(input_path, output_path):
     df = pd.read_csv(input_path)
     df = df.dropna()
     df.to_csv(output_path, index=False)
-    print(f"✅ Cleaned data saved to {output_path}")
+    print(f"✅ Loading data from {input_path}")
+    print(f"Cleaning data...")
+    print(f"✅ Data cleaned: {len(df)} rows")
+    print(f"✅ Cleaned data INTO INTO saved to {output_path}")
+    print("Done")
 
 
 if __name__ == "__main__":
