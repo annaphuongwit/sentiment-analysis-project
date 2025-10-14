@@ -2,16 +2,16 @@ import argparse
 import logging
 import sys
 from typing import Any
+
 import numpy as np
-from numpy.typing import NDArray
 from joblib import load
+from numpy.typing import NDArray
 
 # --- Logging config ---
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(levelname)s %(message)s")
+logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
 
 log = logging.getLogger(__name__)
+
 
 def load_model(model_path: str) -> Any:
     """Load and return a trained classifier."""
@@ -51,20 +51,24 @@ def safe_predict_texts(
 ) -> tuple[list[int], list[float | None]]:
     """Return predictions safely; handle empty or invalid input."""
     if not input_texts:
-        #print("⚠️ No input text provided.")
+        # print("⚠️ No input text provided.")
         log.warning("⚠️ No input text provided.")
         return [], []
     try:
         return predict_texts(classifier, input_texts)
-    except Exception as e:
-        #print(f"⚠️ Prediction error: {e}")
+    except Exception:
+        # print(f"⚠️ Prediction error: {e}")
         log.warning("⚠️ Prediction error: {e}")
         return [], []
 
 
 def summarize_predictions(preds: list[int]) -> None:
     """Show 📊 summary of 👍 positive vs 👎 negative predictions."""
-    log.info(f"\n📊 {len(preds)} texts | 👍 {sum(preds)} pos | 👎 {len(preds) - sum(preds)} neg\n")
+    summary = (
+    f"\n📊 {len(preds)} texts | 👍 {sum(preds)} pos | "
+    f"👎 {len(preds) - sum(preds)} neg\n")
+    log.info(summary)
+
 
 
 def main(model_path: str, input_texts: list[str]) -> None:
@@ -72,11 +76,10 @@ def main(model_path: str, input_texts: list[str]) -> None:
     preds, probs = predict_texts(classifier, input_texts)
     for line in format_prediction_lines(input_texts, preds, probs):
         log.info(line)
-   
+
     preds, probs = safe_predict_texts(classifier, input_texts)
-    
+
     summarize_predictions(preds)
-   
 
 
 if __name__ == "__main__":
@@ -87,9 +90,13 @@ if __name__ == "__main__":
 
     if not args.text:
         parser.print_usage()
-        print('\nerror: at least one text is required.\n'
-              'example:\n  python -m src.predict --model models/sentiment.joblib '
-              '"I love this!" "This is terrible."\n', file=sys.stderr)
+        log.info(
+            "\nerror: at least one text is required.\n"
+            "example:\n  python -m src.predict --model models/sentiment.joblib "
+            '"I love this!" "This is terrible."\n',
+            file=sys.stderr,
+        )
+
         sys.exit(2)
 
     main(model_path=args.model, input_texts=args.text)

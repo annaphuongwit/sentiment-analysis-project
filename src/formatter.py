@@ -1,16 +1,19 @@
-import pandas as pd
 import argparse
+import logging
 
+import pandas as pd
+
+log = logging.getLogger(__name__)
 
 def clean_data(input_path, output_path):
     df = pd.read_csv(input_path)
     df = df.dropna()
     df.to_csv(output_path, index=False)
-    print(f"✅ Loading data from {input_path}")
-    print(f"Cleaning data...")
-    print(f"✅ Data cleaned: {len(df)} rows")
-    print(f"✅ Cleaned data INTO INTO saved to {output_path}")
-    print("Done")
+    log.info("✅ Loading data from {input_path}")
+    log.info("Cleaning data...")
+    log.info("✅ Data cleaned: {len(df)} rows")
+    log.info("✅ Cleaned data INTO INTO saved to {output_path}")
+    log.info("Done")
 
 
 if __name__ == "__main__":
