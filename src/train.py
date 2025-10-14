@@ -1,13 +1,14 @@
+import argparse
+import logging
 import os
-from joblib import dump 
+
+import pandas as pd
+from joblib import dump
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
-from sklearn.pipeline import Pipeline, make_pipeline
-from sklearn.model_selection import train_test_split
-import pandas as pd
 from sklearn.metrics import classification_report, confusion_matrix
-import logging
-import argparse
+from sklearn.model_selection import train_test_split
+from sklearn.pipeline import Pipeline, make_pipeline
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 log = logging.getLogger(__name__)
@@ -65,8 +66,9 @@ def save_model(model: Pipeline, model_path: str) -> None:
     """
     os.makedirs(os.path.dirname(model_path), exist_ok=True)
     dump(model, model_path)
-    #print(f"Saved model to {model_path}")
+    # print(f"Saved model to {model_path}")
     log.info("Saved model to {model_path}")
+
 
 # for fix/my-awesome-fix
 def evaluate_model(model: Pipeline, X_test: pd.Series, y_test: pd.Series) -> None:
@@ -88,11 +90,8 @@ def evaluate_model(model: Pipeline, X_test: pd.Series, y_test: pd.Series) -> Non
     log.info("\n%s", classification_report(y_test, y_pred, digits=3))
     log.info("\n%s", confusion_matrix(y_test, y_pred))
 
-    #acc = clf.score(X_test, y_test)
-    #log.info("Test accuracy: %.3f", acc)
-
-
-
+    # acc = clf.score(X_test, y_test)
+    # log.info("Test accuracy: %.3f", acc)
 
 
 def main(data_path: str, model_path: str) -> None:
@@ -105,7 +104,7 @@ def main(data_path: str, model_path: str) -> None:
 
     # Evaluate and print accuracy
     acc = clf.score(X_test, y_test)
-    #print(f"Test accuracy: {acc:.3f}")
+    # print(f"Test accuracy: {acc:.3f}")
     log.info("Test accuracy: %.3f", acc)
 
     # New step: print detailed metrics
